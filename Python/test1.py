@@ -23,9 +23,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # Initializing PulsePal
 from PulsePal import PulsePalObject # Import PulsePalObject
 myPulsePal = PulsePalObject() # Create a new instance of a PulsePal object
-myPulsePal.connect('COM3') # Connect to PulsePal on port COM3 (open port, handshake and receive firmware version)
+myPulsePal.connect('COM4') # Connect to PulsePal on port COM3 (open port, handshake and receive firmware version)
+
+# Examples of programming individual output channel parameters
+myPulsePal.programOutputChannelParam('isBiphasic', 1, 0) # Program output channel 1 not to use biphasic pulses
+myPulsePal.programOutputChannelParam('phase1Voltage', 1, 2) # Program channel 1 to use 10V for phase 1 of its biphasic pulses
+myPulsePal.programOutputChannelParam('phase1Duration', 1, 0.01) # Example for a 32-bit time parameter
+myPulsePal.programTriggerChannelParam('triggerMode', 1, 0) # Set trigger channel 1 to normal mode
+myPulsePal.programOutputChannelParam('pulseTrainDuration', 1, 2)
+myPulsePal.syncAllParams()
+
+# Soft-triggering output channels
+myPulsePal.triggerOutputChannels(1, 1, 0, 1) # Soft-trigger channels 1, 2 and 4
+
+import time
+time.sleep(0.5) # Allow pulse trains to play for a while
+myPulsePal.abortPulseTrains() # Abort pulse trains on all output channels
+
 print(myPulsePal.firmwareVersion) # Print firmware version to the console
 
+# Disconnect PulsePal
+myPulsePal.disconnect() # Sends a termination byte and closes the serial port. PulsePal stores current params to its EEPROM.
+
+'''
 # Examples of programming individual output channel parameters
 myPulsePal.programOutputChannelParam('isBiphasic', 1, 1) # Program output channel 1 to use biphasic pulses
 myPulsePal.programOutputChannelParam('phase1Voltage', 1, 10) # Program channel 1 to use 10V for phase 1 of its biphasic pulses
@@ -87,3 +107,4 @@ time.sleep(2)
 
 # Disconnect PulsePal
 myPulsePal.disconnect() # Sends a termination byte and closes the serial port. PulsePal stores current params to its EEPROM.
+'''
